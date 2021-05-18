@@ -1,7 +1,7 @@
 #This playbbok will install HTTP server,wget and vim package using loops.
 
 ---
-- hosts: localhost
+- hosts: all
   become: true
   tasks:
     - name: Install list of packages

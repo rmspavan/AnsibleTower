@@ -6,4 +6,4 @@
    - name: git clone
      git:
       repo: 'https://github.com/rmspavan/webapp.git'
-      dest: /home/ec2-user/
+      dest: ./

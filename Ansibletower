@@ -1,0 +1,79 @@
+Ansible Tower:
+Main features:
+1.	Clean Dashboard
+2.	Manage Inventory dynamically
+3.	Real time job status
+4.	Integrate internal notification.
+5.	Role base access control
+6.	Audit job and tower resource
+7.	Adhoc remote command access (built in module)
+8.	Store credential safety for different tool
+9.	REST API to take it further.
+10.	Self-service UI
+
+Prerequisites to install Ansible Tower:
+1.	Supported OS: (64-bit support required (kernel and runtime) and 20 GB hard disk)
+a.	RHEL 6/7/8 64bit
+b.	Centos 6/7 64 bit
+c.	Ubuntu 12/14/16 LTS 64 bit
+
+2.	Latest stable release of Ansible.
+3.	Aws: instance size m4.large or larger is required.
+
+Step 1: Update system and add EPEL repository.
+a.	Update Package Manager
+
+$ sudo yum -y update
+
+b.	Install EPEL Repository on RHEL
+
+$ sudo dnf install
+https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm -y
+
+c.	Confirm EPEL installation
+
+$ sudo dnf repolist epel
+
+d.	Ansible Tower used Ansible Playbook to deploy itself, so we also need Ansible installed.
+$sudo yum -y install ansible vim curl
+
+Step 2: Update system and add EPEL repository.
+a.	Download the latest Ansible Tower release.
+$ mkdir /tmp/tower && cd /tmp/tower
+$ curl -k -0 https://releases.ansible.com/ansible-tower/setup/ansible-tower-setup-latest.tar.gz
+
+$ tar xvf ansible-tower-setup-latest.tar.gz
+
+Step 3: Install Ansible Tower.
+a.	Navigate to the created folder.
+
+$ ansible-tower-setup-latest*/
+
+b.	Edit the inventory file.
+$vi inventory
+[tower]
+localhost ansible_connection=local
+
+[automationhub]
+
+[database]
+
+[all:vars]
+admin_password='root123'
+
+pg_host=''
+pg_port=''
+
+pg_database='awx'
+pg_username='awx'
+pg_password='root123'
+pg_sslmode='prefer'  # set to 'verify-full' for client-side enforced SSL
+
+c.	Installation of ansible
+$ sudo ./setup.sh
+d.	Start Ansible
+$ sudo ansible-tower-service start
+
+
+
+

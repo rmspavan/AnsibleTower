@@ -5,7 +5,7 @@ $ ansible --version
 Create a new user called ansible and assign it to sudo group
 $ adduser ansible
  $ passwd ansible
- $ usermod -aG wheeel ansible
+ $ usermod -aG wheel ansible
  
 Login as ansible and allow sudo access without password for the login user in Remote Machine for Ansible to run any root commands
 $ su ansible

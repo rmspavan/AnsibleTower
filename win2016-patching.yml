@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: yes
+  become_user: Administrator
+  gather_facts: no
+
+  tasks:
+  - name: Install only particular updates based on the KB numbers
+    win_updates:
+      category_name:
+      - SecurityUpdates
+      whitelist:
+      - KB4052623 
+      reboot: yes
+    register: patch_status
+  
+  - debug:
+      var: patch_status
+
+
+# To uninstall a KB
+# wmic qfe list brief /format:table        
+# wusa /uninstall /kb:5001347

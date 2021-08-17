@@ -1,0 +1,16 @@
+---
+- hosts: all
+  tasks:
+  - name: AnsibleTest
+    win_group:
+        name: Ansible # required. Name of the group.
+        state: present # not required. choices: absent;present. Create or remove the group.
+        description: Ansible_group # not required. Description of the group.
+        
+  - name: Ensure user bob is present
+    win_user:
+        name: test
+        password: Test@1234
+        state: present
+        groups:
+        - Ansible

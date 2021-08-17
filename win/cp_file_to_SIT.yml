@@ -1,0 +1,15 @@
+---
+- hosts: SIT
+  become: yes
+  gather_facts: no
+
+  tasks:
+  - name: Transfer file from local repo to SIT server(s)
+    synchronize:
+      src: /var/lib/awx/projects/akpk/akpk_staging
+      dest: /u01/install
+    delegate_to: localhost
+    register: result
+
+  - debug:
+      var: result

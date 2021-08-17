@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  become: yes
+
+  tasks:
+  - name: clone repo from GitLab
+    ansible.builtin.git:
+      repo: 'git@gitlab.st.com:root/for_akpk.git'
+      dest: /var/lib/awx/projects/akpk/akpk_staging
+      version: Staging
+      accept_hostkey: yes
+    register: clone_status
+
+  - debug:
+      var: clone_status

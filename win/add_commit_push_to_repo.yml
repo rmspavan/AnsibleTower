@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  become: yes
+  gather_facts: no
+
+  tasks:
+  - name: Git - Adding, committing and pushing
+    shell: git checkout Staging && git add -A && \
+      git commit -m 'Adding new files to repo' && git push
+    args:
+      chdir: /var/lib/awx/projects/akpk/akpk_staging
+    ignore_errors: yes
+    register: gitadd_commit_push
+
+  - debug:
+      var: gitadd_commit_push

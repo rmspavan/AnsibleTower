@@ -1,0 +1,13 @@
+---
+- hosts: win
+  become: yes
+  become_user: Administrator
+  gather_facts: no
+
+  tasks:
+  - name: Save the result of 'whoami' in 'whoami_out'
+    win_shell: whoami
+    register: whoami_out
+
+  - debug:
+      var: whoami_out

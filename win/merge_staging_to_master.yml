@@ -1,0 +1,24 @@
+---
+- hosts: localhost
+  become: yes
+  gather_facts: no
+
+  tasks:
+  - name: Git merge from Staging to master
+    shell: git checkout master && git pull origin master && \
+      git merge remotes/origin/Staging && git push
+    args:
+      chdir: /var/lib/awx/projects/akpk/akpk_staging
+    register: git_merge
+
+  - debug:
+      var: git_merge
+
+  - name: Checkout Staging, to prevent future modification to master branch
+    shell: git checkout Staging
+    args:
+      chdir: /var/lib/awx/projects/akpk/akpk_staging
+    register: checkout_status
+
+  - debug:
+      var: checkout_status

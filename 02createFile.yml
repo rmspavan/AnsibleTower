@@ -1,5 +1,5 @@
 ---
-- hosts: appServers
+- hosts: all
   tasks:
    - name: Create a file
      file:

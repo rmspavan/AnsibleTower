@@ -1,0 +1,8 @@
+---
+- hosts: all
+  tasks:
+    - name: AnsibleTest
+      win_group:
+          name: Ansible # required. Name of the group.
+          state: absent # not required. choices: absent;present. Create or remove the group.
+          description: Ansible_group # not required. Description of the group.

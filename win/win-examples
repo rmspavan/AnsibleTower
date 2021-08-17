@@ -1,0 +1,121 @@
+---
+- hosts: all
+  tasks:
+  - name: AnsibleTest
+    win_group:
+        name: Ansible # required. Name of the group.
+        state: present # not required. choices: absent;present. Create or remove the group.
+        description: Ansible_group # not required. Description of the group.
+
+
+Group management
+- name: Create a new group
+win_group:
+name: deploy
+description: Deploy Group
+state: present
+
+ 
+
+- name: Remove a group
+win_group:
+name: deploy
+state: absent
+
+ 
+
+- name: Add a local and domain user to a local group
+win_group_membership:
+name: Remote Desktop Users
+members:
+- NewLocalAdmin
+- DOMAIN\TestUser
+state: present
+
+ 
+
+- name: Remove a domain group and service user from a local group
+win_group_membership:
+name: Backup Operators
+members:
+- DOMAIN\TestGroup
+- NT AUTHORITY\SYSTEM
+state: absent
+
+ 
+
+- name: Ensure only a domain user exists in a local group
+win_group_membership:
+name: Remote Desktop Users
+members:
+- DOMAIN\TestUser
+state: pure
+
+
+User management
+- name: Ensure user bob is present
+win_user:
+name: bob
+password: B0bP4ssw0rd
+state: present
+groups:
+- Users
+
+ 
+
+- name: Ensure user bob is absent
+win_user:
+name: bob
+state: absent
+
+ 
+
+- name: Add the user 'johnd' with a specific uid and a primary group of 'admin'
+user:
+name: johnd
+comment: John Doe
+uid: 1040
+group: admin
+
+ 
+
+- name: Add the user 'james' with a bash shell, appending the group 'admins' and 'developers' to the user's groups
+user:
+name: james
+shell: /bin/bash
+groups: admins,developers
+append: yes
+
+ 
+
+- name: Remove the user 'johnd'
+user:
+name: johnd
+state: absent
+remove: yes
+
+ 
+
+- name: Create a 2048-bit SSH key for user jsmith in ~jsmith/.ssh/id_rsa
+user:
+name: jsmith
+generate_ssh_key: yes
+ssh_key_bits: 2048
+ssh_key_file: .ssh/id_rsa
+
+ 
+
+- name: Added a consultant whose account you want to expire
+user:
+name: james18
+shell: /bin/zsh
+groups: developers
+expires: 1422403387
+
+ 
+
+- name: Starting at Ansible 2.6, modify user, remove expiry time
+user:
+name: james18
+expires: -1
+Return Values

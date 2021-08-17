@@ -4,13 +4,13 @@
   - name: AnsibleTest
     win_group:
         name: Ansible # required. Name of the group.
-        state: absent # not required. choices: absent;present. Create or remove the group.
+        state: present # not required. choices: absent;present. Create or remove the group.
         description: Ansible_group # not required. Description of the group.
         
   - name: Ensure user bob is present
     win_user:
         name: bob
-        #password: B0bP4ssw0rd
-        state: absent
-        #groups:
-        #- Ansible
+        password: B0bP4ssw0rd
+        state: present
+        groups:
+        - Ansible

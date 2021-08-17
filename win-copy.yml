@@ -1,0 +1,15 @@
+---
+
+- hosts: win
+
+  tasks:
+
+  - name: Copy File
+
+    win_copy:
+
+      src: C:\output.pdf
+
+      dest: C:\test\
+     
+      remote_src: yes

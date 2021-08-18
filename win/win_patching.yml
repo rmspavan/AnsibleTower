@@ -1,0 +1,18 @@
+---
+- hosts: win
+#  become: yes
+#  become_user: Administrator
+  gather_facts: no
+
+  tasks:
+  - name: Install particular updates based on the KB number(s)
+    win_updates:
+      category_name:
+      - SecurityUpdates
+      whitelist:
+      - KB5005076
+      reboot: no
+    register: patch_status
+
+  - debug:
+      var: patch_status

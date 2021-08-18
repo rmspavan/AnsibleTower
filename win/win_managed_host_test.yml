@@ -1,7 +1,7 @@
 ---
 - hosts: win
-  become: yes
-  become_user: Administrator
+#  become: yes
+#  become_user: administrator
   gather_facts: no
 
   tasks:

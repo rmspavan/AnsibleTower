@@ -1,0 +1,16 @@
+---
+- hosts: win
+#  become: yes
+#  become_user: Administrator
+  gather_facts: no
+
+  tasks:
+  - name: stop Windows service
+    win_service:
+      name: wuauserv
+      state: stopped
+      start_mode: disabled
+    register: service_status
+
+  - debug:
+      var: service_status

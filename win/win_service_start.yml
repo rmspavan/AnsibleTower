@@ -1,0 +1,16 @@
+---
+- hosts: win
+#  become: yes
+#  become_user: Administrator
+  gather_facts: no
+
+  tasks:
+  - name: test service
+    win_service:
+      name: wuauserv
+      state: started
+      start_mode: manual
+    register: service_status
+
+  - debug:
+      var: service_status

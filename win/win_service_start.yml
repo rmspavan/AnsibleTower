@@ -1,5 +1,5 @@
 ---
-- hosts: win
+- hosts: all
 #  become: yes
 #  become_user: Administrator
   gather_facts: no

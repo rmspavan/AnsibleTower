@@ -1,1 +1,7 @@
-
+---
+- hosts: all
+  tasks:
+   - name: Create a file
+     file:
+      path: /tmp/pavan.txt
+      state: touch

@@ -35,7 +35,7 @@ vi ec2.yml
     ec2_group:
       name: WebSG
       description: Security Group for Web Server allowing port for http and ssh
-      region: ap-south-1 #check the location
+      region: us-east-2 #check the location
       aws_access_key: "{{ access_key }}"
       aws_secret_key: "{{ secret_key }}"
       rules:

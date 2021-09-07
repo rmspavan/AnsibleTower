@@ -1,0 +1,118 @@
+1. ansible-vault create cred.yml
+
+access_key: <your aws access key>  #enter the access key
+secret_key: <your aws secret key>  # enter the secret key
+
+
+
+vim /etc/ansible/ansible.cfg
+[defaults]
+host_key_checking = false
+remote_user = ec2-user
+ask_pass = false
+private_key_file = /root/aws-ansible/rms.pem #check the path
+roles_path = /root/aws-ansible/roles #check the path
+
+[privilege_escalation]
+become = true
+become_method = sudo
+become_user = root
+become_ask_pass = false
+
+
+vi ec2.yml
+
+- hosts: localhost
+  gather_facts: no
+  vars_files:
+  - cred.yml
+  tasks:
+  - name:
+    pip:
+      name: boto3
+      state: present
+  - name: Creating Security Group for WebServer on AWS
+    ec2_group:
+      name: WebSG
+      description: Security Group for Web Server allowing port for http and ssh
+      region: ap-south-1 #check the location
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      rules:
+      - proto: tcp
+        from_port: 22
+        to_port: 22
+        cidr_ip: 0.0.0.0/0
+      - proto: tcp
+        from_port: 80
+        to_port: 80
+        cidr_ip: 0.0.0.0/0
+      rules_egress:
+      - proto: all
+        cidr_ip: 0.0.0.0/0
+  - name: launching ec2 instance for webserver
+    ec2:
+      key_name: rms #.pem key name
+      instance_type: t2.micro
+      image: ami-0e306788ff2473ccb
+      wait: true
+      group: WebSG
+      count: 1
+      vpc_subnet_id: subnet-6dfdc705
+      assign_public_ip: yes
+      region: ap-south-1 # check the region
+      state: present
+      aws_access_key: "{{ access_key }}"
+      aws_secret_key: "{{ secret_key }}"
+      instance_tags:
+        Name: webserver
+    register: ec2
+
+  - name: Add new instance to host group
+    add_host:
+      hostname: "{{ item.public_ip }}"
+      groupname: webserver
+    loop: "{{ ec2.instances }}"
+
+  - name: Wait for SSH to come up
+    wait_for:
+      host: "{{ item.public_dns_name }}"
+      port: 22
+      state: started
+    loop: "{{ ec2.instances }}"
+
+- hosts: webserver
+  gather_facts: no
+  tasks:
+  - name: running role
+    include_role:
+      name: httpdserver
+
+
+ansible-galaxy init httpdserver
+Creating Task inside Role :
+Next, we need to write the tasks which will configure HTTPD server on our EC2 Instance.
+
+For the go inside the “httpdserver” folder and then go inside the “tasks” folder. 
+There you will find one file called “main.yml”. Edit that file and write the below-mentioned script.
+
+---
+# tasks file for httpdserver
+- name: install httpd
+  package:
+        name: httpd
+        state: present
+- name: copy code
+  get_url:
+          url: https://raw.githubusercontent.com/raktim00/DevOpsHW/master/index.html
+          dest: "/var/www/html/index.html"
+- name: start httpd
+  service:
+          name: httpd
+          state: started
+
+
+$ls
+cred.yml ec2.yml roles rms.pem
+
+ansible-playbook ec2.yml --ask-vault-pass

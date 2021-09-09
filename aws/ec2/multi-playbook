@@ -1,0 +1,75 @@
+/playbooks/00-ping.yml
+---
+- hosts: all
+  tasks:
+    - name: Ping All Servers
+      action: ping
+    - debug: msg="Success"
+    
+/playbooks/01-upgrade.yml
+---
+- hosts: all
+  tasks:
+    - name: upgrade all packages
+      become: yes
+      yum:
+        name: '*'
+        state: latest
+
+playbooks/02-download-node.yml
+---
+- hosts: all
+  tasks:
+    - name: Download node binary distro
+      shell: curl sL https://rpm.nodesource.com/setup_12.x | sudo bash -
+
+/playbooks/03-install-node.yml
+---
+- hosts: all
+  tasks:
+    - name: Install Node
+      become: yes
+      yum:
+        name: nodejs
+        state: present
+
+/playbooks/04-provisioning.yml
+---
+- hosts: all
+  tasks:
+    - name: Copy app files
+      copy:
+        src: ~/documents/my-app-folder/
+        dest: /home/ec2-user/my-app
+        force: no
+    - debug: msg="Success"
+
+/playbooks/05-install-dependencies.yml
+---
+- hosts: all
+  tasks:
+    - name: Install packages based on package.json.
+      npm:
+        path: /home/ec2-user/my-app
+
+
+
+/playbooks/main.yml
+---
+- name: Ping
+  import_playbook: 00-ping.yml
+
+- name: Update
+  import_playbook: 01-update.yml
+
+- name: Download Node
+  import_playbook: 02-download-node.yml
+
+- name: Install Node
+  import_playbook: 03-install-node.yml
+
+- name: Provisioning
+  import_playbook: 04-provisioning.yml
+
+- name: Install Dependencies
+  import_playbook: 05-install-dependencies.yml
